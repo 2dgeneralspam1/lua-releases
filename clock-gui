@@ -1,0 +1,30 @@
+local time = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local time_2 = Instance.new("TextLabel")
+
+time.Name = "time"
+time.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+time.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = time
+Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.016516516, 0, 0.020858895, 0)
+Frame.Size = UDim2.new(0, 149, 0, 43)
+Frame.Draggable = true
+
+time_2.Name = "time"
+time_2.Parent = Frame
+time_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+time_2.BackgroundTransparency = 1.000
+time_2.Size = UDim2.new(0, 149, 0, 43)
+time_2.Font = Enum.Font.GothamBold
+time_2.Text = "clock"
+time_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+time_2.TextSize = 18.000
+spawn(function()
+while wait(0.001) do
+time_2.Text = os.date("%I:%M:%S")
+end
+end)
