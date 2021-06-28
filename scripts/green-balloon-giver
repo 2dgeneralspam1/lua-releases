@@ -1,0 +1,28 @@
+-- sorry for shitty code
+-- for nds (natural disaster survival)
+
+if game.Workspace:FindFirstChild("GreenBalloon", true) then
+    for i, v in pairs(game:GetService("Workspace"):GetDescendants()) do
+        if v.Name == "GreenBalloon" then
+            print("Green balloon found...")
+            if game.Players.LocalPlayer.Backpack:FindFirstChild("GreenBalloon") then
+                print("Player already has a green balloon! Disgarding extra.")
+            else
+                local clonedBalloon = v:Clone()
+                clonedBalloon.Parent = game.Players.LocalPlayer.Character
+                clonedBalloon.Parent = game.Players.LocalPlayer.Backpack
+                game.StarterGui:SetCore(
+                    "SendNotification",
+                    {
+                        Title = "success",
+                        Text = "success, you should have a green balloon",
+                        Icon = "",
+                        Duration = 5
+                    }
+                )
+            end
+        end
+    end
+else
+    print("no balloons found")
+end
