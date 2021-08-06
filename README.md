@@ -1,2 +1,2 @@
 # lua releases
-Lua releases 🍔
+random lua releases that i make 
