@@ -1,13 +1,5 @@
 _G.Active = true 
 
-local function createNotif(title,text,icon,duration)
-	game.StarterGui:SetCore("SendNotification", {
-		Title = title; 
-		Text = text;
-		Icon = icon; 
-		Duration = duration; 
-	})
-end
 
 while _G.Active == true do 
 	pcall(function()
@@ -33,7 +25,6 @@ while _G.Active == true do
 
 		print("moving to "..tostring(NearestPart).." which has brickcolor "..tostring(NearestPart.BrickColor))
 		game.Players.LocalPlayer.Character.Humanoid:MoveTo(NearestPart.Position)
-		createNotif("garfield","Moving to brick "..tostring(NearestPart).." which has brickcolor "..tostring(NearestPart.BrickColor),nil,"5")
 	end) 
 	wait(0.1)
 end 
