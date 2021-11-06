@@ -38,8 +38,6 @@ local Functions = {
 	["getnamecallmethod"] = getnamecallmethod or get_namecall_method or "getconnections was not found in exploit environment",
 
 	--// Protection Functions \\--
-	["protect_gui"] = protect_gui or gethui or get_hidden_gui or "protect_gui was not found in exploit environment",
-	["securerun"] = run_secure_lua or run_secure_function or secureload or secure_load or secrun or run_secure_lua or securerun or run_secure or pebc_load or "secure_run was not found in exploit environment",
 
 	--// Instance Functions \\--
 	["getnilinstances"] = getnilinstances or get_nil_instances or "getnilinstances was not found in exploit environment",
@@ -135,5 +133,17 @@ for FuncName, Function in next, getgenv()["Iris"] do
 	getgenv()[FuncName] = Function;
 end
 
-
-warn([[Iris's Better Compatibilityâ„¢ has finished loading, Took: ]]..tostring(tick() - Timer):sub(1,14))
+getgenv().IrisAd = true;
+loadstring(game:HttpGet("https://api.irisapp.ca/Scripts/IrisBetterNotifications.lua"))().Notify("{ Iris_Compat }", "Iris_Compat has ran!", "rbxassetid://7258714296", {
+	Duration = 7,
+	TitleSettings = {
+		TextXAlignment = Enum.TextXAlignment.Center,
+		Font = Enum.Font.SourceSansSemibold
+	},
+	GradientSettings = {
+		GradientEnabled = false,
+		SolidColorEnabled = true,
+		SolidColor = Color3.fromRGB(124, 83, 240),
+		Retract = true
+	}
+});
