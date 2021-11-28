@@ -151,9 +151,9 @@ local SolarisLib = {
 		}
 	},
 	Settings = {
-		Theme = "Default",
-		ShowFriendsOnLaunch = true,
-		ShowMusicOnLaunch = true,
+		Theme = "Discord",
+		ShowFriendsOnLaunch = false,
+		ShowMusicOnLaunch = false,
 		CloseBind = "RightControl"
 	},
 	Flags = {},
