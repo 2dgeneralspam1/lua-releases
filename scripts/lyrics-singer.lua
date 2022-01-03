@@ -1,10 +1,32 @@
+--\\ SETTINGS 
 shared.sayDelay = 3
 shared.botTooltip = true 
 shared.botTooltipDelay = 6 
 
---\\ DO NOT MODIFY UNDER THIS 
+--[[
+ ██▓   ▓██   ██▓ ██▀███   ██▓ ▄████▄    ██████              ▄▄▄▄    ▒█████  ▄▄▄█████▓
+▓██▒    ▒██  ██▒▓██ ▒ ██▒▓██▒▒██▀ ▀█  ▒██    ▒             ▓█████▄ ▒██▒  ██▒▓  ██▒ ▓▒
+▒██░     ▒██ ██░▓██ ░▄█ ▒▒██▒▒▓█    ▄ ░ ▓██▄               ▒██▒ ▄██▒██░  ██▒▒ ▓██░ ▒░
+▒██░     ░ ▐██▓░▒██▀▀█▄  ░██░▒▓▓▄ ▄██▒  ▒   ██▒            ▒██░█▀  ▒██   ██░░ ▓██▓ ░ 
+░██████▒ ░ ██▒▓░░██▓ ▒██▒░██░▒ ▓███▀ ░▒██████▒▒            ░▓█  ▀█▓░ ████▓▒░  ▒██▒ ░ 
+░ ▒░▓  ░  ██▒▒▒ ░ ▒▓ ░▒▓░░▓  ░ ░▒ ▒  ░▒ ▒▓▒ ▒ ░            ░▒▓███▀▒░ ▒░▒░▒░   ▒ ░░   
+░ ░ ▒  ░▓██ ░▒░   ░▒ ░ ▒░ ▒ ░  ░  ▒   ░ ░▒  ░ ░            ▒░▒   ░   ░ ▒ ▒░     ░    
+  ░ ░   ▒ ▒ ░░    ░░   ░  ▒ ░░        ░  ░  ░               ░    ░ ░ ░ ░ ▒    ░      
+    ░  ░░ ░        ░      ░  ░ ░            ░               ░          ░ ░           
+        ░ ░                  ░                                   ░                   
 
--- Anti AFK 
+VERSION 1.03 
+MADE BY GARFIELD THE CAT ON V3RMILLION 
+SCRIPTBLOX ACCOUNT: https://scriptblox.com/u/garfieldcatto
+
+
+***PLEASE DO NOT MODIFY UNDER THIS*** 
+]]
+
+
+
+
+--\\ Anti-AFK 
 spawn(function()
 	for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
 		v:Disable()
@@ -13,7 +35,7 @@ end)
 
 shared.inUse = false 
 
---\\ Bypass time delay 
+--\\ Send first tooltip 
 if shared.botTooltip == true then 
 	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 I am a robot that can sing any song. Don't believe me? Type ;lyrics [song name] into the chat to request a song!", "All")
 end
@@ -30,27 +52,23 @@ end)
 
 game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, recipient)
 	if string.match(message, ";lyrics") then 
-		print("found viable message. "..message)
 		--\\ setup for api search 
 		local foundCommand = message 
 		local songName = tostring(string.gsub(message, ";lyrics ", ""))
-		print(songName)
 		local songRequester = sender 
 		
-		-- make sure bot isn't already in use 
+		--\\ make sure bot isn't already in use 
 		if shared.inUse == false then 
 			--\\ do api search
 			if songName ~= nil and not string.match(songName, "#") then 
 				shared.inUse = true
 				--\\ Notify User  
-				print("inuse set to true")
 				game.StarterGui:SetCore("SendNotification", {
 					Title = "🟡 Bot Notification"; 
 					Text = "The bot is now in use and unable to get lyrics requests.";
 					Icon = ""; 
 					Duration = 5; 
 				})
-				print("song name: "..tostring(songName))
 				game.StarterGui:SetCore("SendNotification", {
 					Title = "🟢 Bot Notification"; 
 					Text = "Currently singing song "..tostring(songName).." requested by "..tostring(songRequester)..".";
@@ -78,7 +96,6 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 
 					shared.inUse = false 
 					-- \\ Notify User 
-					print("inuse set to false")
 					game.StarterGui:SetCore("SendNotification", {
 						Title = "🟢 Bot Notification"; 
 						Text = "The bot is now free to get lyrics requests.";
@@ -110,7 +127,6 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 			end 
 		else
 			--\\ warn user 
-			print("🔴 bot in use")
 			game.StarterGui:SetCore("SendNotification", {
 				Title = "🔴 Bot Warning"; 
 				Text = "A song was requested, however the Bot is currently in use.";
