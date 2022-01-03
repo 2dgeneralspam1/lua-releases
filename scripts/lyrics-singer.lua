@@ -106,7 +106,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 				end
 			else -- incase of nil or hashtags 
 				wait(0.5)
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 You cannot request hashtags, "..tostring(songRequester)..". Use your brain.", "All")
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 You cannot request hashtags, "..tostring(songRequester)..". Try another song.", "All")
 			end 
 		else
 			--\\ warn user 
