@@ -12,7 +12,7 @@
     ░  ░░ ░        ░      ░  ░ ░            ░               ░          ░ ░           
         ░ ░                  ░                                   ░                   
 
-VERSION 1.04 
+VERSION 1.05 
 MADE BY GARFIELD THE CAT ON V3RMILLION 
 SCRIPTBLOX ACCOUNT: https://scriptblox.com/u/garfieldcatto
 
@@ -33,8 +33,9 @@ end)
 --\\ Set up logs 
 if shared.botLogs == true then 
 	rconsoleclear()
+	rconsolename("Lyrics Bot Logs")
 	rconsoleprint('@@WHITE@@')
-	rconsoleprint("Lyrics Bot v1.04 waiting...\n")
+	rconsoleprint("Lyrics Bot v1.05 waiting...\n")
 end
 
 shared.inUse = false -- ⚠️ DO NOT MODIFY THIS 
@@ -42,13 +43,17 @@ shared.songCount = 0
 
 --\\ Send first tooltip 
 if shared.botTooltip == true then 
-	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! I'm a robot that can sing any song. Use the command ;lyrics [Song Name] to request a song!", "All")
+	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! I'm a robot that was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
 end
 
 spawn(function() -- \\ Bot Loop Tooltip
 	while wait(shared.botTooltipDelay) do 
 		if shared.botTooltip == true and shared.inUse == false then 
-			game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! I'm a robot that can sing any song. Use the command ;lyrics [Song Name] to request a song!", "All")
+			if math.random(1,10) == 10 then 
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: Did you know that this script was made by a user called 'garfieldcatto'?.", "All")
+			else
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! I'm a robot that was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
+			end
 		end
 	end
 end)
@@ -89,7 +94,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 				-- delay 
 				wait(0.5)
 				-- announce current song 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Now singing song '"..tostring(songName).."' requested by "..tostring(songRequester)..".", "All")
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Attemping to sing song '"..tostring(songName).."' requested by "..tostring(songRequester)..".", "All")
 				if shared.botLogs == true then 
 					rconsoleprint('@@YELLOW@@')
 					rconsoleprint("\nTesting song "..tostring(songName))
@@ -129,7 +134,9 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						shared.songCount = shared.songCount + 3 
 					end
 					
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 The requested song will last for "..tostring(shared.songCount).." seconds. Please keep in mind that I cannot take song requests in this time.", "All")
+					shared.songMinutesCount = math.round(shared.songCount/60)
+					
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Success! The song was found in my API's libraries. The requested song will last for about "..tostring(shared.songMinutesCount).." minutes. Please keep in mind that I cannot take song requests during my singing time.", "All")
 					
 					game.StarterGui:SetCore("SendNotification", {
 						Title = "🟢 Bot Notification"; 
@@ -145,6 +152,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 					
 					
 					shared.songCount = 0 
+					shared.songMinutesCount = 0 
 					
 					if shared.botLogs == true then 
 						rconsoleprint('@@WHITE@@')
@@ -153,7 +161,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 
 					for i, v in pairs(lyrics) do
 						wait(shared.sayDelay)
-						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🎵 "..v, "All")
+						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🎵 | "..v, "All")
 					end
 
 					shared.inUse = false 
@@ -165,6 +173,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						Duration = 5; 
 					})
 					if shared.botTooltip == true then 
+						wait(0.5) -- or else it fucks itself idk why
 						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 I've finished singing! Type ;lyrics [song name] into the chat to request a song!", "All")
 					end
 					if shared.botLogs == true then 
@@ -179,7 +188,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						Icon = ""; 
 						Duration = 5; 
 					})
-					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 I'm sorry, but I couldn't find that song. Try another one.", "All")
+					game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 I'm sorry, but I couldn't find that song. Please try another one.", "All")
 					game.StarterGui:SetCore("SendNotification", {
 						Title = "🔴 Bot Warning"; 
 						Text = "Invalid song was requested. Skipping.";
