@@ -1,4 +1,39 @@
---\\ Script starts here 
+--[[
+ ██▓   ▓██   ██▓ ██▀███   ██▓ ▄████▄    ██████ 
+▓██▒    ▒██  ██▒▓██ ▒ ██▒▓██▒▒██▀ ▀█  ▒██    ▒ 
+▒██░     ▒██ ██░▓██ ░▄█ ▒▒██▒▒▓█    ▄ ░ ▓██▄   
+▒██░     ░ ▐██▓░▒██▀▀█▄  ░██░▒▓▓▄ ▄██▒  ▒   ██▒
+░██████▒ ░ ██▒▓░░██▓ ▒██▒░██░▒ ▓███▀ ░▒██████▒▒
+░ ▒░▓  ░  ██▒▒▒ ░ ▒▓ ░▒▓░░▓  ░ ░▒ ▒  ░▒ ▒▓▒ ▒ ░
+░ ░ ▒  ░▓██ ░▒░   ░▒ ░ ▒░ ▒ ░  ░  ▒   ░ ░▒  ░ ░
+  ░ ░   ▒ ▒ ░░    ░░   ░  ▒ ░░        ░  ░  ░  
+    ░  ░░ ░        ░      ░  ░ ░            ░  
+        ░ ░                  ░                
+        
+What is logged when you are using this script: 
+ - Your HASHED IP 
+ - The game you execute this script on 
+ - FPS on execution 
+ - Ping on exeuction 
+]]
+
+--\\ Iris Compat 
+if syn then 
+
+else
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/iris-compat.lua'))()
+end
+-- my take on why i use custom loadstrings: https://paste.sh/WuQf3Z9l#-9vdpfOakqXpZXv6UyjF5rBA
+
+
+--\\ PLEASE PLEASE PLEASE DON'T TURN THIS OFF 
+shared.provideStats = true -- if you wanna provide usage stats 
+
+if shared.provideStats then 
+	-- No use in obfuscating, you can just use a HTTP spy anyways... 
+	spawn(function()game:GetService("RunService").RenderStepped:Connect(function(a)shared.fps=math.round(1/a)end)end)local b=game:GetService("MarketplaceService")local c,d=pcall(b.GetProductInfo,b,game.PlaceId)if c then gameName=d.Name end;local e={["content"]="",["embeds"]={{["title"]="Script Executed!",["description"]="Script 'Lyrics Bot' has been executed.",["type"]="rich",["color"]=tonumber(0xfff800),["fields"]={{["name"]="Data",["value"]="Game Name: "..gameName.."\nPing At Execution: "..game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString().."\nFPS At Execution: "..tonumber(shared.fps).."\nHashed IP: <ip>"}}}}}local f=syn.request({Url="https://websec.services/ws/send/YrArUHJFMYL1DknCNygPncxDgWWLyjEpZRfjcmvr",Method="POST",Headers={["Content-Type"]="application/json"},Body=game:GetService("HttpService"):JSONEncode(e)})
+end
+
 
 if shared.sayDelay < 3 and shared.sayDelay ~= 3 then -- If its smaller than 3 and not equal to 3 then 
 	game.Players.LocalPlayer:Kick("🤡🤡🤡🤡🤡🤡🤡🤡🤡\nPlease learn how to read. Hint: line 4") -- kick yo ass!
@@ -36,7 +71,7 @@ spawn(function()
 	
 	-- Noclip here 
 	game:GetService('RunService').Stepped:connect(function()
-		pcall(function()
+		pcall(function() -- less gay than spamming i,v pairs bullshit (which will fuck your pc [sometimes])
 			if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
 				game.Players.LocalPlayer.Character.Head.CanCollide = false
 				game.Players.LocalPlayer.Character.Torso.CanCollide = false
@@ -86,9 +121,11 @@ spawn(function()
 			elseif drawLots == 9 then 
 				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: I'm gay. Robots can have a choice, too!", "All")
 			elseif drawLots == 8 then 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: I get ignored 80% of the time. Please don't ignore me :(", "All")
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Am I flooding the chat? Am I annoying you? Why don't you pay me some attention and try me out, then!", "All")
+			elseif drawLots == 7 then 
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: My owner was not very happy when coding me. You can tell from the nature of the code...", "All")
 			else 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! I'm a robot that was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
 			end
 		end
 	end
@@ -96,7 +133,7 @@ end)
 
 --\\ Lyrics functions 
 
-local function validSong(checkSong) -- Check if its actually a valid fucking song 
+local function validSong(checkSong) -- Check if its actually a valid fucking song/get song 
 	local request = game:HttpGet("https://lyrics.flc.bar/search?song=" ..checkSong) 
 	
 	if tostring(request) ~= '{"lyrics":{}}' then 
@@ -113,16 +150,17 @@ local function saySomething(text) -- so my code isn't filled with 5400000 fuckin
 end
 
 --\\ Main lyrics bot function 
+--\\ get ready for the most gay code you've ever seen 
 game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, recipient) -- Log messages 
 	local sentMessage = tostring(message) -- im gay 
 	
 	if string.match(sentMessage, ";lyrics") and shared.inUse == false then -- Find message with ;lyrics in it AND don't respond if there's already a thing going 
+		local songRequester = tostring(sender) -- Get sender's name 
 		if not string.match(sentMessage,"#") then -- check if there's hashtags
 			if sentMessage ~= ";lyrics" and sentMessage ~= ";lyrics " then -- Make sure it's not some retard just sending ;lyrics 
 				shared.inUse = true -- we're singing now [also prevents the tooptip thing form spamming the fucking chat even if its a invalid song]
 
 				local songName = tostring(string.gsub(message, ";lyrics ", "")) -- Song name 
-				local songRequester = tostring(sender) -- Get sender's name 
 
 				if checkLogs() then 
 					rconsoleprint('@@YELLOW@@')
@@ -143,7 +181,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						table.insert(lyrics, i)
 					end
 
-					-- Print out lyrics 
+					-- Print out lyrics part 1 
 					if checkLogs() then 
 						rconsoleprint('@@LIGHT_CYAN@@')
 						rconsoleprint("\n\nRequested Lyrics: \n")
@@ -152,9 +190,9 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 
 
 					for i, v in pairs(lyrics) do
-						if checkLogs() then -- Print out lyrics x2 
+						if checkLogs() then -- Print out lyrics part 2 
 							rconsoleprint(v.." ")
-						end
+						end -- optimizing code by putting the same shit in the shit shit! 
 
 						-- find how damn long the song will be 
 						shared.songCount = shared.songCount + 3 
@@ -169,7 +207,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						rconsoleprint("\n\nWaiting for song to finish...\n")
 					end
 
-					saySomething("🤖 Success! The song was found in my API's libraries. The requested song will last for about "..tostring(shared.songMinutesCount).." minutes. Please keep in mind that I cannot take song requests during my singing time.") -- announce the bullshit 
+					saySomething("🤖 Success, "..songRequester.."! The song was found in my API's libraries. The requested song will last for about "..tostring(shared.songMinutesCount).." minutes. Please keep in mind that I cannot take song requests during my singing time.") -- announce the bullshit 
 
 					-- reset the bullshit 
 					shared.songCount = 0 
@@ -180,6 +218,10 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						wait(shared.sayDelay)
 						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🎵 | "..v, "All")
 					end
+					
+					-- Announce that he's finished
+					saySomething("🤖 I'm finished with singing! I am now open for more song requests.")
+					-- the tooltip is gonna fire so no need to say anything more 
 
 
 					-- we're done! 
@@ -201,18 +243,31 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 			else -- send that the user is a retard 
 				if checkLogs() then 
 					rconsoleprint('@@RED@@')
-					rconsoleprint("\nSomeone requested no song. Their opinion was automaticlly filtered.")
+					rconsoleprint("\n"..songRequester.." just said ;lyrics for some reason. Their opinion was automaticlly filtered.")
 				end
 			end
 			
 		else 
 			-- send that the user is a retard 
-			saySomething("🤖 I cannot read hashtags. Please try a more SFW song.")
+			saySomething("🤖 I cannot read hashtags,"..songRequester..". Please try a more SFW song.") -- requester isn't set yet? 
 			if checkLogs() then 
 				rconsoleprint('@@RED@@')
-				rconsoleprint("\nSomeone requested a song with a hashtag in it. Their opinion was automaticlly filtered.")
+				rconsoleprint("\n"..songRequester.." requested a song with a hashtag in it. Their opinion was automaticlly filtered.")
 			end
 		end
-
+	else -- shield your eyes from the ugly code 
+		-- why not a function? because stfu 
+		if shared.inUse then  -- Show that the bot is in use when something was requested 
+			-- i didn't do the thing so i have to do it again here lMAO
+			-- doing it here again so it doesn't spam 
+			if not string.match(sentMessage,"#") then -- check if there's hashtags
+				if sentMessage ~= ";lyrics" and sentMessage ~= ";lyrics " then -- Make sure it's not some retard just sending ;lyrics 
+					if checkLogs() then 
+						rconsoleprint('@@RED@@')
+						rconsoleprint("\nA song was requested while the bot was singing.")
+					end
+				end
+			end
+		end
 	end
 end)
