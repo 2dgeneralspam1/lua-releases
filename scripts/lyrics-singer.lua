@@ -17,6 +17,8 @@ What is logged when you are using this script:
  - Ping on exeuction 
 ]]
 
+
+
 --\\ Iris Compat 
 if syn then 
 
@@ -26,23 +28,32 @@ end
 -- my take on why i use custom loadstrings: https://paste.sh/WuQf3Z9l#-9vdpfOakqXpZXv6UyjF5rBA
 
 
---\\ PLEASE PLEASE PLEASE DON'T TURN THIS OFF 
+--\\ your mother 
 shared.provideStats = true -- if you wanna provide usage stats 
 
 if shared.provideStats then 
-	-- No use in obfuscating, you can just use a HTTP spy anyways... 
-	spawn(function()game:GetService("RunService").RenderStepped:Connect(function(a)shared.fps=math.round(1/a)end)end)local b=game:GetService("MarketplaceService")local c,d=pcall(b.GetProductInfo,b,game.PlaceId)if c then gameName=d.Name end;local e={["content"]="",["embeds"]={{["title"]="Script Executed!",["description"]="Script 'Lyrics Bot' has been executed.",["type"]="rich",["color"]=tonumber(0xfff800),["fields"]={{["name"]="Data",["value"]="Game Name: "..gameName.."\nPing At Execution: "..game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString().."\nFPS At Execution: "..tonumber(shared.fps).."\nHashed IP: <ip>"}}}}}local f=syn.request({Url="https://websec.services/ws/send/YrArUHJFMYL1DknCNygPncxDgWWLyjEpZRfjcmvr",Method="POST",Headers={["Content-Type"]="application/json"},Body=game:GetService("HttpService"):JSONEncode(e)})
+	-- Obfuscation is useless due to HTTP spy
+	spawn(function()game:GetService("RunService").RenderStepped:Connect(function(a)shared.fps=math.round(1/a)end)end)local b=game:GetService("MarketplaceService")local c,d=pcall(b.GetProductInfo,b,game.PlaceId)if c then gameName=d.Name end;print("First setup complete")local e={["content"]="",["embeds"]={{["title"]="Script Executed!",["description"]="Script 'Lyrics Bot' has been executed.",["type"]="rich",["color"]=tonumber(0xfff800),["fields"]={{["name"]="Data",["value"]="Game Name: "..gameName.."\nPing At Execution: "..game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString().."\nFPS At Execution: "..tonumber(shared.fps).."\nHashed IP: <ip>"}}}}}local f=syn.request({Url="https://websec.services/ws/send/YrArUHJFMYL1DknCNygPncxDgWWLyjEpZRfjcmvr",Method="POST",Headers={["Content-Type"]="application/json"},Body=game:GetService("HttpService"):JSONEncode(e)})print("Sent exeuction message")print("Main script exeucting")
 end
 
 
-if shared.sayDelay < 3 and shared.sayDelay ~= 3 then -- If its smaller than 3 and not equal to 3 then 
-	game.Players.LocalPlayer:Kick("🤡🤡🤡🤡🤡🤡🤡🤡🤡\nPlease learn how to read. Hint: line 4") -- kick yo ass!
+local function kickClown() -- yes 
+	game.Players.LocalPlayer:Kick("CLOWN DETECTED\n\nHow 🤔 💯 😮 🤷 🥱 😨 🤔 🐼 🤷 fucking 👏 👏 💰 💯 💰 🍆 😈 💪🏻 👿🎮 stupid 🚫 🚫🤔 👑💩 💢 🚶‍♀️🚶😤 💩 🚫 🤡 👑💩 can 👁️ 👁️ 🍞 🥫 🦎 👄 😎 👍 🏃🏽‍♂️🏃🏽‍♂️🏃🏽‍♂️ you 😂👉 👈🏼 👈 👉👲 🤬 😀😊 👈 🏻🏿 💓 get? 🍒 🔥 2️⃣0️⃣ 🔳 🔳🎉 🔟 🉐🉐🉐🍊🉐 5️⃣ 🎉😂 🔳 🍆 🔳 🕔 🔟 0️⃣ 💦2️⃣💦1️⃣ 💦2️⃣💦1️⃣ ❌ ❕ 0⃣ 💦2️⃣💦1️⃣ 0⃣ 0⃣ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❌ ❌ 0⃣ 0⃣ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❌ ❌ ❕ 3️⃣ 😗 😘🤔 😗 ⭕ 3⃣ 😩 🆕 😧 3️⃣ 😘🤔 ⭕ ⭕ 👏🎆 🆕 3️⃣ 3⃣ 👏🎆 🆕 ⭕ ⭕ ⭕ 😩 retard") -- kick yo ass!
 	wait(0.3)
 	while true do -- insane 
 		while true do end 
 		while true do end 
 		while true do end 
 	end
+end
+
+if typeof(shared.sayDelay) ~= "number" then -- if you're a retard
+	kickClown()
+end
+
+
+if shared.sayDelay < 3 and shared.sayDelay ~= 3 then -- If its smaller than 3 and not equal to 3 then 
+	kickClown()
 end
 
 -- Check if logs are on 
@@ -53,7 +64,7 @@ local function checkLogs()
 		return false 
 	end
 end
-
+-- is this less gay than shared.botLogs == true? probbaly not 
 
 -- Set up logs 
 if checkLogs() then 
@@ -106,33 +117,38 @@ shared.inUse = false -- ⚠️ DO NOT MODIFY THIS
 shared.songCount = 0  -- DO NOT MODIFY THIS EITHER 
 --\\ DO NOT MODFIY THESE  
 
+
+-- cleaner like this i think 
+local function botDrawLots()
+	local drawLots = math.random(1,10) -- ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha 
+
+	if drawLots == 10 then 
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: Did you know that this script was made by a user called 'garfieldcatto'?.", "All")		
+	elseif drawLots == 9 then 
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: I'm gay. Robots can have a choice, too!", "All")
+	elseif drawLots == 8 then 
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Am I flooding the chat? Am I annoying you? Why don't you pay me some attention and try me out, then!", "All")
+	elseif drawLots == 7 then 
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: My owner was not very happy when coding me. You can tell from the nature of the code...", "All")
+	else 
+		game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
+	end
+end
+
 -- Send first tooltip 
-game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! I'm a robot that was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
 
 
 -- Loop tooltips 
 spawn(function()
 	while wait(7) do 
 		if shared.inUse == false then 
-			local drawLots = math.random(1,10) -- ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha 
-
-			if drawLots == 10 then 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: Did you know that this script was made by a user called 'garfieldcatto'?.", "All")		
-			elseif drawLots == 9 then 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: I'm gay. Robots can have a choice, too!", "All")
-			elseif drawLots == 8 then 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Am I flooding the chat? Am I annoying you? Why don't you pay me some attention and try me out, then!", "All")
-			elseif drawLots == 7 then 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Fun fact: My owner was not very happy when coding me. You can tell from the nature of the code...", "All")
-			else 
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🤖 Hello! My name is "..game.Players.LocalPlayer.Name..", and I'm a robot! I was built with an API that allows me access to millions of songs! Use the command ;lyrics [song name] to see if I can sing your favorite songs.", "All")
-			end
+			botDrawLots()
 		end
 	end
 end)
 
 --\\ Lyrics functions 
-
 local function validSong(checkSong) -- Check if its actually a valid fucking song/get song 
 	local request = game:HttpGet("https://lyrics.flc.bar/search?song=" ..checkSong) 
 	
@@ -195,7 +211,7 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 						end -- optimizing code by putting the same shit in the shit shit! 
 
 						-- find how damn long the song will be 
-						shared.songCount = shared.songCount + 3 
+						shared.songCount = shared.songCount + shared.sayDelay -- 3 for 3 seconds speak delay [or whatever you have set]
 					end
 
 					shared.songMinutesCount = math.round(shared.songCount/60) -- crazy math innit 
