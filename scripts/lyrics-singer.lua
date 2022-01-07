@@ -18,7 +18,6 @@ What is logged when you are using this script:
 ]]
 
 
-
 --\\ Iris Compat 
 if syn then 
 
@@ -28,8 +27,26 @@ end
 -- my take on why i use custom loadstrings: https://paste.sh/WuQf3Z9l#-9vdpfOakqXpZXv6UyjF5rBA
 
 
+--\\ notifications 
+local function notify(text,duration)
+	game.StarterGui:SetCore("SendNotification", {
+		Title = "Garfield"; 
+		Text = text;
+		Icon = ""; 
+		Duration = duration; 
+	})
+end
+
+spawn(function()
+	notify("🥳 Good news! You can now stop songs from playing.", 5)
+	task.wait(1)
+	notify("Use the command ';stop' to perform this action. Others cannot use this command.", 5)
+end)
+
+
+
 --\\ your mother 
-shared.provideStats = true -- if you wanna provide usage stats 
+shared.provideStats = false -- if you wanna provide usage stats 
 
 if shared.provideStats then 
 	-- Obfuscation is useless due to HTTP spy
@@ -39,7 +56,7 @@ end
 
 local function kickClown() -- yes 
 	game.Players.LocalPlayer:Kick("CLOWN DETECTED\n\nHow 🤔 💯 😮 🤷 🥱 😨 🤔 🐼 🤷 fucking 👏 👏 💰 💯 💰 🍆 😈 💪🏻 👿🎮 stupid 🚫 🚫🤔 👑💩 💢 🚶‍♀️🚶😤 💩 🚫 🤡 👑💩 can 👁️ 👁️ 🍞 🥫 🦎 👄 😎 👍 🏃🏽‍♂️🏃🏽‍♂️🏃🏽‍♂️ you 😂👉 👈🏼 👈 👉👲 🤬 😀😊 👈 🏻🏿 💓 get? 🍒 🔥 2️⃣0️⃣ 🔳 🔳🎉 🔟 🉐🉐🉐🍊🉐 5️⃣ 🎉😂 🔳 🍆 🔳 🕔 🔟 0️⃣ 💦2️⃣💦1️⃣ 💦2️⃣💦1️⃣ ❌ ❕ 0⃣ 💦2️⃣💦1️⃣ 0⃣ 0⃣ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❌ ❌ 0⃣ 0⃣ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❕ 💦2️⃣💦1️⃣ ❌ ❌ ❌ ❌ ❕ 3️⃣ 😗 😘🤔 😗 ⭕ 3⃣ 😩 🆕 😧 3️⃣ 😘🤔 ⭕ ⭕ 👏🎆 🆕 3️⃣ 3⃣ 👏🎆 🆕 ⭕ ⭕ ⭕ 😩 retard") -- kick yo ass!
-	wait(0.3)
+	task.wait(0.3)
 	while true do -- insane 
 		while true do end 
 		while true do end 
@@ -115,6 +132,7 @@ end)
 --\\ DO NOT MODFIY THESE 
 shared.inUse = false -- ⚠️ DO NOT MODIFY THIS 
 shared.songCount = 0  -- DO NOT MODIFY THIS EITHER 
+shared.forceStop = false 
 --\\ DO NOT MODFIY THESE  
 
 
@@ -141,7 +159,7 @@ game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageReque
 
 -- Loop tooltips 
 spawn(function()
-	while wait(7) do 
+	while task.wait(7) do 
 		if shared.inUse == false then 
 			botDrawLots()
 		end
@@ -161,16 +179,28 @@ end
 
 
 local function saySomething(text) -- so my code isn't filled with 5400000 fucking same things 
-	wait(0.1)
+	task.wait(0.1)
 	game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(text, "All")
 end
+
 
 --\\ Main lyrics bot function 
 --\\ get ready for the most gay code you've ever seen 
 game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, recipient) -- Log messages 
 	local sentMessage = tostring(message) -- im gay 
 	
+	-- \\ stop music function thing 
+	if string.match(sentMessage, ";stop") and tostring(sender) == tostring(game.Players.LocalPlayer.Name) and shared.inUse then 
+		if checkLogs() then 
+			rconsoleprint('@@RED@@')
+			rconsoleprint("\nYou requested the current song to stop.")
+		end
+		shared.inUse = false
+		shared.forceStop = true
+	end
+	
 	if string.match(sentMessage, ";lyrics") and shared.inUse == false then -- Find message with ;lyrics in it AND don't respond if there's already a thing going 
+		print("h")
 		local songRequester = tostring(sender) -- Get sender's name 
 		if not string.match(sentMessage,"#") then -- check if there's hashtags
 			if sentMessage ~= ";lyrics" and sentMessage ~= ";lyrics " then -- Make sure it's not some retard just sending ;lyrics 
@@ -231,19 +261,23 @@ game.Players.PlayerChatted:Connect(function(PlayerChatType, sender, message, rec
 
 					-- ACTUALYL SING THE BULLSHIT 
 					for i, v in pairs(lyrics) do
-						wait(shared.sayDelay)
+						task.wait(shared.sayDelay)
+						if shared.forceStop then -- i wonder if there's another way to do this lmao 
+							saySomething("🤖 The controller of this bot has requested the current song to be terminated. I am now open for more song requests.")
+							break 
+						end
 						game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("🎵 | "..v, "All")
 					end
 					
-					-- Announce that he's finished
-					saySomething("🤖 I'm finished with singing! I am now open for more song requests.")
-					-- the tooltip is gonna fire so no need to say anything more 
-
-
-					-- we're done! 
-					shared.inUse = false
-
-
+					if shared.forceStop then 
+						shared.forceStop = false 
+					else
+						-- we're done! 
+						shared.inUse = false
+						-- Announce that he's finished
+						saySomething("🤖 I'm finished with singing! I am now open for more song requests.")
+						-- the tooltip is gonna fire so no need to say anything more 
+					end	
 				else -- say that it's a fucking invalid song 
 					saySomething("🤖 Sorry "..songRequester..", that song wasn't found by my API.")
 					if checkLogs() then 
