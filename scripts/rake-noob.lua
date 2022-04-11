@@ -13,6 +13,14 @@ local function Notify(Text)
     })
 end
 
+-- anti afk
+for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
+    v:Disable()
+end
+
+Notify("Anti-AFK enabled")
+
+
 --proximity
 local function fireproximityprompt(Obj, Amount, Skip)
     if Obj.ClassName == "ProximityPrompt" then 
