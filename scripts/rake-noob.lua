@@ -44,7 +44,7 @@ end
 
 -- ESP 
 local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
-ESP:Toggle(true)
+ESP:Toggle(false)
 ESP.Players = false 
 ESP.Tracers = false 
 ESP.Boxes = false 
@@ -59,8 +59,9 @@ ESP:AddObjectListener(game:GetService("Workspace"), {
 
 for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
 	if v:IsA("Part") then 
-	   ESP:Add(v, {
-            Name = v.Name,
+	   newname = tostring(string.gsub(v.Name, "Part", ""))
+        ESP:Add(v, {
+            Name = newname,
             IsEnabled = "Locations",
             Color = Color3.fromRGB(139, 203, 255)
         })
@@ -174,7 +175,8 @@ end)
 local locations = {}
 for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
 	if v:IsA("Part") then 
-        table.insert(locations, v.Name)
+        local changedName = tostring(string.gsub(v.Name, "Part", ""))
+        table.insert(locations, changedName)
     end 
 end
 
@@ -184,7 +186,7 @@ Features.AddDropdown("Locations", locations, function(Value)
 end)
 
 Features.AddButton("Teleport to Location", function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.LocationsBillboardGuis[selection].CFrame
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.LocationsBillboardGuis[selection.."Part"].CFrame
 end) 
 
 -- Loops
