@@ -99,26 +99,43 @@ Home.AddToggle("Shop", false, function(Value)
     end 
 end)
 
+Home.AddButton("OP Flashlight",function()
+    game.Players.LocalPlayer.Character.Flashlight.LightPart.LightAttachment.Light.Angle = 180
+    game.Players.LocalPlayer.Character.Flashlight.LightPart.LightAttachment.Light.Brightness = 500
+    game.Players.LocalPlayer.Character.Flashlight.LightPart.LightAttachment.Light.Range = 100
+end) 
+
+
+
 local Features = MainUI.AddPage("Features")
 
--- make baseplate in the sky
-local baseplate = Instance.new("Part")
-baseplate.Parent = workspace
-baseplate.Size = Vector3.new(100,5,100) 
-baseplate.Anchored = true
-baseplate.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,100,0)
 
 Features.AddToggle("Autofarm Wins",false,function(Value)
     shared.AutoFarm = Value
 end) 
 
-Features.AddToggle("Stay OnTop of Rake (Break Rake) (Buggy)",false,function(Value)
-    shared.StayOnTop = Value
-end)
-
 Features.AddToggle("Infinite Stamina", false, function(Value)
     shared.stamina = Value 
 end)
+
+Features.AddSlider("Walkspeed", {Min = 0, Max = 255, Def = 16}, function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    shared.walkspeedvalue = Value 
+end)
+
+Features.AddSlider("JumpPower", {Min = 0, Max = 255, Def = 50}, function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    shared.jumppowervalue = Value 
+end)
+
+Features.AddToggle("Don't Change My Values 😭", false, function(Value)
+    shared.dontchange = Value 
+end)
+
+Features.AddButton("Show Time",function()
+    Notify("Time Remaining: "..game:GetService("Workspace").LocationsFolder.DestroyedShelter.Clock.TextPart.SurfaceGui.TimerTextLabel.Text)
+end) 
+
 
 Features.AddButton("Collect all ducks",function()
     for i,v in pairs(workspace.StuffGiversFolder.DuckParts:GetDescendants()) do
@@ -173,14 +190,13 @@ spawn(function()
             if shared.loopcollectscraps then 
                 for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.ScrapMetals:GetDescendants()) do
                     if v:IsA("TouchTransmitter") then 
-                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,v.Parent,0)
-                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,v.Parent,1)
+                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,v.Parent,0); firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,v.Parent,1)
                     end 
                 end
             end 
 
-            if shared.StayOnTop then 
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace")["The_Rake"].Head.CFrame * CFrame.new(0,15,0)
+            if shared.dontchange then 
+                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = shared.walkspeedvalue; game.Players.LocalPlayer.Character.Humanoid.JumpPower = shared.jumppowervalue
             end 
         end) 
     end 
@@ -190,7 +206,7 @@ spawn(function()
     pcall(function()
         while wait(3) do 
             if shared.AutoFarm then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = baseplate.CFrame + Vector3.new(0,12,0)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-840.9910278320312, -54.25994110107422, 157.66748046875)
             end 
         end 
     end) 
