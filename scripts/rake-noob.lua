@@ -49,6 +49,16 @@ ESP:AddObjectListener(game:GetService("Workspace"), {
     IsEnabled = "theRake"
 })
 
+for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
+	if v:IsA("Part") then 
+	   ESP:Add(v, {
+            Name = v.Name,
+            IsEnabled = "Locations",
+            Color = Color3.fromRGB(139, 203, 255)
+        })
+	end 
+end
+
 Home.AddToggle("ESP", false, function(Value)
     ESP:Toggle(Value)
 end)
@@ -72,6 +82,10 @@ end)
 Home.AddToggle("Show Rake", false, function(Value)
     ESP.theRake = Value 
 end)
+
+Home.AddToggle("Show Locations",false,function(Value)
+    ESP.Locations = Value 
+end) 
 
 Home.AddToggle("Fullbright",false,function(Value)
     loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/minified/zzzzz1'))()
@@ -176,7 +190,7 @@ spawn(function()
     pcall(function()
         while wait(3) do 
             if shared.AutoFarm then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = baseplate.CFrame + Vector3.new(0,10,0)
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = baseplate.CFrame + Vector3.new(0,12,0)
             end 
         end 
     end) 
