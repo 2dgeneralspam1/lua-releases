@@ -98,7 +98,7 @@ Features.AddToggle("Autofarm Wins",false,function(Value)
     shared.AutoFarm = Value
 end) 
 
-Features.AddToggle("Stay OnTop of Rake",false,function(Value)
+Features.AddToggle("Stay OnTop of Rake (Break Rake) (Buggy)",false,function(Value)
     shared.StayOnTop = Value
 end)
 
