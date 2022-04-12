@@ -50,23 +50,79 @@ ESP.Tracers = false
 ESP.Boxes = false 
 ESP.Names = false
 
-ESP:AddObjectListener(game:GetService("Workspace"), {
+ESP:AddObjectListener(workspace, {
     Name = "The_Rake",
     CustomName = "The Rake",
+    PrimaryPart = function(obj)
+        local root = obj:FindFirstChild("HumanoidRootPart")
+        while not root do 
+            task.wait()
+            root = obj:FindFirstChild("HumanoidRootPart")
+        end
+        return root 
+    end, 
+    Validator = function(obj)
+        if obj:FindFirstChild("Scream") then 
+            return true
+        else 
+            return false
+        end
+    end,
     Color = Color3.fromRGB(255, 0, 0),
     IsEnabled = "theRake"
 })
 
 for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
-	if v:IsA("Part") then 
-	   newname = tostring(string.gsub(v.Name, "Part", ""))
+    if v:IsA("Part") then 
+        local newname = tostring(string.gsub(v.Name, "Part", ""))
         ESP:Add(v, {
             Name = newname,
             IsEnabled = "Locations",
             Color = Color3.fromRGB(139, 203, 255)
         })
-	end 
+    end 
 end
+
+
+-- Flare Gun ESP
+ESP:AddObjectListener(workspace, {
+    Name = "FlareGun",
+    CustomName = "Flare Gun",
+    Color = Color3.fromRGB(255, 123, 125),
+    PrimaryPart = function(obj) -- Set the primary part to the handle 
+        local handle = obj:FindFirstChild("Handle")
+        while not handle do 
+            task.wait()
+            handle = obj:FindFirstChild("Handle")
+        end
+        return handle 
+    end, 
+    Validator = function(obj)
+        if obj:IsA("Tool") then 
+            return true
+        else 
+            return false
+        end
+    end, 
+    IsEnabled = "flareGun"
+})
+
+-- Supply drop ESP
+ESP:AddObjectListener(workspace, {
+    Name = "SupplyDrop",
+    Type = "Model",
+    CustomName = "Supply Drop",
+    PrimaryPart = function(obj)
+        local root = obj:FindFirstChild("Supply Crate",true)
+        while not root do
+            task.wait()
+            root = obj:FindFirstChild("Supply Crate",true)
+        end
+        return root
+    end, 
+    Color = Color3.fromRGB(241, 255, 180),
+    IsEnabled = "supplyDrop"
+})
 
 Home.AddToggle("ESP", false, function(Value)
     ESP:Toggle(Value)
@@ -95,6 +151,14 @@ end)
 Home.AddToggle("Show Locations",false,function(Value)
     ESP.Locations = Value 
 end) 
+
+Home.AddToggle("Show Flare Gun", false, function(Value)
+    ESP.flareGun = Value 
+end)
+
+Home.AddToggle("Show Supply Drop", false, function(Value)
+    ESP.supplyDrop = Value 
+end)
 
 Home.AddToggle("Fullbright",false,function(Value)
     loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/minified/zzzzz1'))()
@@ -137,22 +201,23 @@ Features.AddSlider("JumpPower", {Min = 0, Max = 255, Def = 50}, function(Value)
     shared.jumppowervalue = Value 
 end)
 
-Features.AddToggle("Don't Change My Values 😭", false, function(Value)
+Features.AddToggle("No Slowdown", false, function(Value)
     shared.dontchange = Value 
 end)
 
-Features.AddButton("Show Time",function()
-    Notify("Time Remaining: "..game:GetService("Workspace").LocationsFolder.DestroyedShelter.Clock.TextPart.SurfaceGui.TimerTextLabel.Text)
-end) 
-
-
-Features.AddButton("Collect all ducks",function()
-    for i,v in pairs(workspace.StuffGiversFolder.DuckParts:GetDescendants()) do
-        if v:IsA("ClickDetector") then
-            fireclickdetector(v)
-        end
+Features.AddButton("Fix Power Station",function()
+    if game:GetService("Workspace").PowerTimer.Value == 0 then 
+        Notify("Attempting to fix Power Station")
+        local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").LocationsFolder.PowerStation.ControlButtons.Buttons.InteractPart.CFrame; task.wait(0.3)
+        fireproximityprompt(game:GetService("Workspace").LocationsFolder.PowerStation.ControlButtons.Buttons.InteractPart.ProximityPrompt,1,true); task.wait(0.3)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame  = currentpos
+        Notify("If it didn't work move your camera so you can see the power station")
+    else 
+        Notify("Power Station is already fixed! It's current power is "..tostring(game:GetService("Workspace").PowerTimer.Value).."%")
     end
 end) 
+
 
 Features.AddButton("Collect all Scraps",function()
     for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.ScrapMetals:GetDescendants()) do
@@ -167,12 +232,9 @@ Features.AddToggle("Loop Collect all Scraps",false,function(Value)
     shared.loopcollectscraps = Value 
 end) 
 
-Features.AddButton("Show Generator Power",function()
-    Notify("Generator Power: "..tostring(game:GetService("Workspace").PowerTimer.Value))
-end) 
+local teleportsPage = MainUI.AddPage("Teleports")
 
-
-local locations = {}
+local locations = {"Vending Machine"}
 for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
 	if v:IsA("Part") then 
         local changedName = tostring(string.gsub(v.Name, "Part", ""))
@@ -181,13 +243,53 @@ for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescenda
 end
 
 local selection = ""
-Features.AddDropdown("Locations", locations, function(Value)
+teleportsPage.AddDropdown("Locations", locations, function(Value)
     selection = Value
 end)
 
-Features.AddButton("Teleport to Location", function()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.LocationsBillboardGuis[selection.."Part"].CFrame
+teleportsPage.AddButton("Teleport to Location", function()
+    if selection == "Vending Machine" then 
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").LocationsFolder.Shop.VendingMachine.Part.CFrame 
+    else 
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.LocationsBillboardGuis[selection.."Part"].CFrame
+    end 
 end) 
+
+
+
+
+local miscFeatures = MainUI.AddPage("Misc")
+
+miscFeatures.AddButton("Collect All Coins",function()
+    for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.CoinsGiverSpawns:GetDescendants()) do
+        if v.Name == "CoinGiverPart" then 
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame; task.wait(0.3)
+            fireproximityprompt(v:FindFirstChild("ProximityPrompt"),1,true); task.wait(0.3)
+        end 
+    end; Notify("Coins Collected")
+end) 
+
+miscFeatures.AddToggle("Loop Turn In Coins",false,function(Value)
+    shared.loopturnincoin = Value 
+end)
+
+miscFeatures.AddButton("Show Time",function()
+    Notify("Time Remaining: "..game:GetService("Workspace").LocationsFolder.DestroyedShelter.Clock.TextPart.SurfaceGui.TimerTextLabel.Text)
+end) 
+
+miscFeatures.AddButton("Show Generator Power",function()
+    Notify("Generator Power: "..tostring(game:GetService("Workspace").PowerTimer.Value))
+end) 
+
+miscFeatures.AddButton("Collect all Ducks",function()
+    for i,v in pairs(workspace.StuffGiversFolder.DuckParts:GetDescendants()) do
+        if v:IsA("ClickDetector") then
+            fireclickdetector(v)
+        end
+    end
+end) 
+
+
 
 -- Loops
 spawn(function()
@@ -207,6 +309,11 @@ spawn(function()
 
             if shared.dontchange then 
                 game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = shared.walkspeedvalue; game.Players.LocalPlayer.Character.Humanoid.JumpPower = shared.jumppowervalue
+            end 
+
+            if shared.loopturnincoin then 
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-227.314208984375, 7.062498092651367, -379.88641357421875)
+                fireproximityprompt(game:GetService("Workspace").LocationsFolder.Shop.VendingMachine.InteractPart.ProximityPrompt,1,true)
             end 
         end) 
     end 
