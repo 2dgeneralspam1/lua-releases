@@ -191,11 +191,13 @@ Features.AddToggle("Infinite Stamina", false, function(Value)
     shared.stamina = Value 
 end)
 
+shared.walkspeedvalue = 16 
 Features.AddSlider("Walkspeed", {Min = 0, Max = 255, Def = 16}, function(Value)
     game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
     shared.walkspeedvalue = Value 
 end)
 
+shared.jumppowervalue = 50 
 Features.AddSlider("JumpPower", {Min = 0, Max = 255, Def = 50}, function(Value)
     game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
     shared.jumppowervalue = Value 
@@ -234,7 +236,7 @@ end)
 
 local teleportsPage = MainUI.AddPage("Teleports")
 
-local locations = {"Vending Machine"}
+local locations = {"Vending Machine","Autofarm Place"}
 for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
 	if v:IsA("Part") then 
         local changedName = tostring(string.gsub(v.Name, "Part", ""))
@@ -250,7 +252,9 @@ end)
 teleportsPage.AddButton("Teleport to Location", function()
     if selection == "Vending Machine" then 
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").LocationsFolder.Shop.VendingMachine.Part.CFrame 
-    else 
+    elseif selection == "Autofarm Place" then 
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-840.9910278320312, -54.25994110107422, 157.66748046875)
+    else
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.LocationsBillboardGuis[selection.."Part"].CFrame
     end 
 end) 
@@ -261,12 +265,14 @@ end)
 local miscFeatures = MainUI.AddPage("Misc")
 
 miscFeatures.AddButton("Collect All Coins",function()
+    local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.CoinsGiverSpawns:GetDescendants()) do
         if v.Name == "CoinGiverPart" then 
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame; task.wait(0.3)
             fireproximityprompt(v:FindFirstChild("ProximityPrompt"),1,true); task.wait(0.3)
         end 
     end; Notify("Coins Collected")
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = currentpos
 end) 
 
 miscFeatures.AddToggle("Loop Turn In Coins",false,function(Value)
@@ -289,6 +295,9 @@ miscFeatures.AddButton("Collect all Ducks",function()
     end
 end) 
 
+miscFeatures.AddSlider("Client FPS Cap", {Min = 0, Max = 300, Def = 80}, function(Value)
+    setfpscap(Value)
+end)
 
 
 -- Loops
