@@ -13,6 +13,26 @@ local function Notify(Text)
     })
 end
 
+-- MT API 
+if not getgenv().MTAPIMutex then loadstring(game:HttpGet("https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/mt-api.lua", true))() end
+
+-- Sound affects
+local notifSound = Instance.new("Sound", game.Workspace)
+notifSound.SoundId = "rbxassetid://216917652"
+
+
+local clickSound = Instance.new("Sound", game.Workspace)
+clickSound.SoundId = "rbxassetid://2668781453"
+clickSound.Volume = 2 
+
+local errorSound = Instance.new("Sound", game.Workspace)
+errorSound.SoundId = "rbxassetid://8972685129"
+errorSound.Volume = 2
+
+local function playClick()
+    clickSound:Play()
+end 
+
 -- Anti AFK
 for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
     v:Disable()
@@ -133,46 +153,55 @@ ESP:AddObjectListener(workspace, {
 --\\ GUI Features 
 Home.AddToggle("ESP", false, function(Value)
     ESP:Toggle(Value)
+    playClick()
 end)
 
 Home.AddToggle("ESP Boxes", false, function(Value)
     ESP.Boxes = Value  
+    playClick()
 end)
 
 Home.AddToggle("ESP Tracers", false, function(Value)
     ESP.Tracers = Value 
+    playClick()
 end)
 
 Home.AddToggle("ESP Nametags", false, function(Value)
     ESP.Names = Value 
+    playClick()
 end)
 
 Home.AddToggle("Show Players", false, function(Value)
     ESP.Players = Value 
+    playClick()
 end)
 
 Home.AddToggle("Show Rake", false, function(Value)
     ESP.theRake = Value 
+    playClick()
 end)
 
 Home.AddToggle("Show Locations",false,function(Value)
     ESP.Locations = Value 
+    playClick()
 end) 
 
 Home.AddToggle("Show Flare Gun", false, function(Value)
     ESP.flareGun = Value 
+    playClick()
 end)
 
 Home.AddToggle("Show Supply Drop", false, function(Value)
     ESP.supplyDrop = Value 
+    playClick()
 end)
 
 Home.AddToggle("Fullbright",false,function(Value)
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/minified/zzzzz1'))()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/minified/zzzzz1'))(); playClick()
 end) 
 
 Home.AddToggle("Show Shop", false, function(Value)
-    if Value then 
+    playClick(); if Value then 
         firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,game:GetService("Workspace").LocationsFolder.Shop.EnterShopPart,0)
     else
         firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,game:GetService("Workspace").LocationsFolder.Shop.EnterShopPart,1)
@@ -185,6 +214,7 @@ local Features = MainUI.AddPage("Features")
 
 local flareListener 
 Features.AddToggle("Notify when Flare Gun spawns",false,function(Value)
+    playClick()
     if game.Workspace:FindFirstChild("FlareGun") and Value then 
         Notify("A flare gun is already on the map")
     end 
@@ -192,6 +222,8 @@ Features.AddToggle("Notify when Flare Gun spawns",false,function(Value)
         flareListener = workspace.ChildAdded:Connect(function(child)
             if child.Name == "FlareGun" and child:IsA("Tool") then 
                 Notify("Flare Gun spawned!")
+                notifSound.Volume = 3 
+                notifSound:Play()
             end 
         end) 
     else
@@ -200,30 +232,46 @@ Features.AddToggle("Notify when Flare Gun spawns",false,function(Value)
 end)
 
 Features.AddToggle("Autofarm Wins",false,function(Value)
+    playClick()
     shared.AutoFarm = Value
 end) 
 
+local getstaminaHook 
 Features.AddToggle("Infinite Stamina", false, function(Value)
-    shared.stamina = Value 
+    playClick()
+    if Value then 
+        getstaminaHook = game.Players.LocalPlayer.Character.CharValues.StaminaPercentValue:AddGetHook("Value",100)
+    else
+        getstaminaHook:Remove()
+    end 
 end)
 
-shared.walkspeedvalue = 16 
+local walkspeedHook 
+local jumppowerHook 
+Features.AddToggle("Bypass WalkSpeed and JumpPower", false, function(Value)
+    playClick()
+    if Value then 
+        walkspeedHook = game.Players.LocalPlayer.Character.Humanoid:AddPropertyEmulator("WalkSpeed")
+        jumppowerHook = game.Players.LocalPlayer.Character.Humanoid:AddPropertyEmulator("JumpPower")
+    else
+        walkspeedHook:Remove()
+        jumppowerHook:Remove()
+    end 
+end)
+
 Features.AddSlider("Walkspeed", {Min = 0, Max = 255, Def = 16}, function(Value)
+    playClick()
     game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-    shared.walkspeedvalue = Value 
 end)
 
 shared.jumppowervalue = 50 
 Features.AddSlider("JumpPower", {Min = 0, Max = 255, Def = 50}, function(Value)
+    playClick()
     game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
-    shared.jumppowervalue = Value 
-end)
-
-Features.AddToggle("No Slowdown", false, function(Value)
-    shared.dontchange = Value 
 end)
 
 Features.AddButton("Fix Power Station",function()
+    playClick()
     if game:GetService("Workspace").PowerTimer.Value == 0 then 
         Notify("Attempting to fix Power Station"); lookDown(); local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").LocationsFolder.PowerStation.ControlButtons.Buttons.InteractPart.CFrame; task.wait(0.3)
@@ -231,11 +279,13 @@ Features.AddButton("Fix Power Station",function()
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame  = currentpos; Notify("Power Station Fixed; wait a little for it to start up")
     else 
         Notify("Power Station is already fixed! It's current power is "..tostring(game:GetService("Workspace").PowerTimer.Value).."%")
+        errorSound:Play()
     end
 end) 
 
 
 Features.AddButton("Collect all Scraps",function()
+    playClick()
     for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.ScrapMetals:GetDescendants()) do
         if v:IsA("TouchTransmitter") then 
             firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,v.Parent,0)
@@ -245,6 +295,7 @@ Features.AddButton("Collect all Scraps",function()
 end) 
 
 Features.AddToggle("Loop Collect all Scraps",false,function(Value)
+    playClick()
     shared.loopcollectscraps = Value 
 end) 
 
@@ -260,10 +311,12 @@ end
 
 local selection = ""
 teleportsPage.AddDropdown("Locations", locations, function(Value)
+    playClick()
     selection = Value
 end)
 
 teleportsPage.AddButton("Teleport to Location", function()
+    playClick()
     if selection == "Vending Machine" then 
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").LocationsFolder.Shop.VendingMachine.Part.CFrame 
     elseif selection == "Autofarm Place" then 
@@ -276,6 +329,7 @@ end)
 local miscFeatures = MainUI.AddPage("Misc")
 
 miscFeatures.AddButton("Collect All Coins",function()
+    playClick()
     local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.CoinsGiverSpawns:GetDescendants()) do
         if v.Name == "CoinGiverPart" then 
@@ -288,18 +342,27 @@ miscFeatures.AddButton("Collect All Coins",function()
 end) 
 
 miscFeatures.AddToggle("Loop Turn In Coins",false,function(Value)
+    playClick()
     shared.loopturnincoin = Value 
 end)
 
 miscFeatures.AddButton("Show Time",function()
+    playClick()
     Notify("Time Remaining: "..game:GetService("Workspace").LocationsFolder.DestroyedShelter.Clock.TextPart.SurfaceGui.TimerTextLabel.Text)
 end) 
 
 miscFeatures.AddButton("Show Generator Power",function()
+    playClick()
     Notify("Generator Power: "..tostring(game:GetService("Workspace").PowerTimer.Value))
 end) 
 
+miscFeatures.AddToggle("NV annoy",false,function(Value)
+    playClick()
+    shared.annoy = Value 
+end)
+
 miscFeatures.AddButton("Collect all Ducks",function()
+    playClick()
     for i,v in pairs(workspace.StuffGiversFolder.DuckParts:GetDescendants()) do
         if v:IsA("ClickDetector") then
             fireclickdetector(v)
@@ -308,6 +371,7 @@ miscFeatures.AddButton("Collect all Ducks",function()
 end) 
 
 miscFeatures.AddSlider("Client FPS Cap", {Min = 0, Max = 300, Def = 80}, function(Value)
+    playClick()
     setfpscap(Value)
 end)
 
@@ -316,10 +380,6 @@ end)
 spawn(function()
     while wait() do 
         pcall(function()
-            if shared.stamina then 
-               game.Players.LocalPlayer.Character.CharValues.StaminaPercentValue.Value = 100
-            end 
-
             if shared.loopcollectscraps then 
                 for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.ScrapMetals:GetDescendants()) do
                     if v:IsA("TouchTransmitter") then 
@@ -328,13 +388,14 @@ spawn(function()
                 end
             end 
 
-            if shared.dontchange then 
-                game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = shared.walkspeedvalue; game.Players.LocalPlayer.Character.Humanoid.JumpPower = shared.jumppowervalue
-            end 
-
             if shared.loopturnincoin then 
                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-227.314208984375, 7.062498092651367, -379.88641357421875)
                 fireproximityprompt(game:GetService("Workspace").LocationsFolder.Shop.VendingMachine.InteractPart.ProximityPrompt,1,true)
+            end 
+
+            if shared.annoy then 
+                game.Players.LocalPlayer.Character.NVGoggles.Handle.PlayDeactivate:FireServer()
+                game.Players.LocalPlayer.Character.NVGoggles.Handle.PlayActivate:FireServer()   
             end 
         end) 
     end 
