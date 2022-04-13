@@ -1,9 +1,9 @@
+-- UI 
 local UILibrary = loadstring(game:HttpGet("https://pastebin.com/raw/V1ca2q9s"))()
-
 local MainUI = UILibrary.Load("CheatX - The Rake Noob")
 local Home = MainUI.AddPage("Visuals")
 
--- notif function
+-- Notify Function
 local function Notify(Text)
     game.StarterGui:SetCore("SendNotification", {
         Title = "CheatX";
@@ -13,15 +13,12 @@ local function Notify(Text)
     })
 end
 
--- anti afk
+-- Anti AFK
 for i,v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
     v:Disable()
 end
 
-Notify("Anti-AFK enabled")
-
-
---proximity
+--proximity by sowd
 local function fireproximityprompt(Obj, Amount, Skip)
     if Obj.ClassName == "ProximityPrompt" then 
         Amount = Amount or 1
@@ -42,6 +39,11 @@ local function fireproximityprompt(Obj, Amount, Skip)
     end
 end
 
+-- look down 
+local function lookDown()
+    workspace.Camera.CFrame = CFrame.new(264.744202, 44.9857788, 19.0272675, 0.917633414, -0.391390145, 0.0690128133, 0, 0.173648611, 0.984807611, -0.397428036, -0.903692365, 0.159345)
+end 
+
 -- ESP 
 local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
 ESP:Toggle(false)
@@ -50,6 +52,7 @@ ESP.Tracers = false
 ESP.Boxes = false 
 ESP.Names = false
 
+-- Rake ESP 
 ESP:AddObjectListener(workspace, {
     Name = "The_Rake",
     CustomName = "The Rake",
@@ -72,6 +75,7 @@ ESP:AddObjectListener(workspace, {
     IsEnabled = "theRake"
 })
 
+-- Locations ESP 
 for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescendants()) do
     if v:IsA("Part") then 
         local newname = tostring(string.gsub(v.Name, "Part", ""))
@@ -83,11 +87,9 @@ for i,v in pairs(game:GetService("Workspace").LocationsBillboardGuis:GetDescenda
     end 
 end
 
-
 -- Flare Gun ESP
 ESP:AddObjectListener(workspace, {
     Name = "FlareGun",
-    CustomName = "Flare Gun",
     Color = Color3.fromRGB(255, 123, 125),
     PrimaryPart = function(obj) -- Set the primary part to the handle 
         local handle = obj:FindFirstChild("Handle")
@@ -99,11 +101,12 @@ ESP:AddObjectListener(workspace, {
     end, 
     Validator = function(obj)
         if obj:IsA("Tool") then 
-            return true
+            return true 
         else 
-            return false
+            return false 
         end
     end, 
+    CustomName = "Flare Gun",
     IsEnabled = "flareGun"
 })
 
@@ -124,6 +127,10 @@ ESP:AddObjectListener(workspace, {
     IsEnabled = "supplyDrop"
 })
 
+
+
+
+--\\ GUI Features 
 Home.AddToggle("ESP", false, function(Value)
     ESP:Toggle(Value)
 end)
@@ -164,7 +171,7 @@ Home.AddToggle("Fullbright",false,function(Value)
     loadstring(game:HttpGet('https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/minified/zzzzz1'))()
 end) 
 
-Home.AddToggle("Shop", false, function(Value)
+Home.AddToggle("Show Shop", false, function(Value)
     if Value then 
         firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart,game:GetService("Workspace").LocationsFolder.Shop.EnterShopPart,0)
     else
@@ -172,16 +179,25 @@ Home.AddToggle("Shop", false, function(Value)
     end 
 end)
 
-Home.AddButton("OP Flashlight",function()
-    game.Players.LocalPlayer.Character.Flashlight.LightPart.LightAttachment.Light.Angle = 180
-    game.Players.LocalPlayer.Character.Flashlight.LightPart.LightAttachment.Light.Brightness = 500
-    game.Players.LocalPlayer.Character.Flashlight.LightPart.LightAttachment.Light.Range = 100
-end) 
-
 
 
 local Features = MainUI.AddPage("Features")
 
+local flareListener 
+Features.AddToggle("Notify when Flare Gun spawns",false,function(Value)
+    if game.Workspace:FindFirstChild("FlareGun") and Value then 
+        Notify("A flare gun is already on the map")
+    end 
+    if Value then 
+        flareListener = workspace.ChildAdded:Connect(function(child)
+            if child.Name == "FlareGun" and child:IsA("Tool") then 
+                Notify("Flare Gun spawned!")
+            end 
+        end) 
+    else
+        flareListener:Disconnect(); Notify("Flare Gun spawn listener disabled")
+    end
+end)
 
 Features.AddToggle("Autofarm Wins",false,function(Value)
     shared.AutoFarm = Value
@@ -209,12 +225,10 @@ end)
 
 Features.AddButton("Fix Power Station",function()
     if game:GetService("Workspace").PowerTimer.Value == 0 then 
-        Notify("Attempting to fix Power Station")
-        local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
+        Notify("Attempting to fix Power Station"); lookDown(); local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame 
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").LocationsFolder.PowerStation.ControlButtons.Buttons.InteractPart.CFrame; task.wait(0.3)
         fireproximityprompt(game:GetService("Workspace").LocationsFolder.PowerStation.ControlButtons.Buttons.InteractPart.ProximityPrompt,1,true); task.wait(0.3)
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame  = currentpos
-        Notify("If it didn't work move your camera so you can see the power station")
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame  = currentpos; Notify("Power Station Fixed; wait a little for it to start up")
     else 
         Notify("Power Station is already fixed! It's current power is "..tostring(game:GetService("Workspace").PowerTimer.Value).."%")
     end
@@ -259,15 +273,13 @@ teleportsPage.AddButton("Teleport to Location", function()
     end 
 end) 
 
-
-
-
 local miscFeatures = MainUI.AddPage("Misc")
 
 miscFeatures.AddButton("Collect All Coins",function()
     local currentpos = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     for i,v in pairs(game:GetService("Workspace").StuffGiversFolder.CoinsGiverSpawns:GetDescendants()) do
         if v.Name == "CoinGiverPart" then 
+            lookDown()
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame; task.wait(0.3)
             fireproximityprompt(v:FindFirstChild("ProximityPrompt"),1,true); task.wait(0.3)
         end 
