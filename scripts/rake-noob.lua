@@ -14,7 +14,7 @@ local function Notify(Text)
 end
 
 -- MT API 
-if not getgenv().MTAPIMutex then loadstring(game:HttpGet("https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/mt-api.lua", true))() end
+if not getgenv().MTAPIMutex then loadstring(game:HttpGet("https://raw.githubusercontent.com/2dgeneralspam1/lua-releases/main/mt-api.lua", true))() end 
 
 -- Sound affects
 local notifSound = Instance.new("Sound", game.Workspace)
@@ -84,13 +84,6 @@ ESP:AddObjectListener(workspace, {
         end
         return root 
     end, 
-    Validator = function(obj)
-        if obj:FindFirstChild("Scream") then 
-            return true
-        else 
-            return false
-        end
-    end,
     Color = Color3.fromRGB(255, 0, 0),
     IsEnabled = "theRake"
 })
