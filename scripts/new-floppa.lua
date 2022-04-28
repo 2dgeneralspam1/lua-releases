@@ -1,3 +1,4 @@
+
 firstgate = false -- thiny that like disables the weird thing
 local function fireproximityprompt(Obj, Amount, Skip)
     if Obj.ClassName == "ProximityPrompt" then 
@@ -298,7 +299,7 @@ main:AddButton({
 main:AddButton({
     Name = "Max Altar (uses all cash)",
     Callback = function()
-        if game.Workspace:FindFirstChild("Altar") then 
+        if game.Workspace:FindFirstChild("Altar") and game:GetService("Workspace").Altar["Thin Wall"].Display.Frame.Faith.Text ~= "Faith:100%" then 
             OrionLib:MakeNotification({
                 Name = "flop",
                 Content = "setting up altar...",
@@ -321,12 +322,21 @@ main:AddButton({
                 Time = 5
             })
         else
-            OrionLib:MakeNotification({
-                Name = "flop",
-                Content = "no altar",
-                Image = "rbxassetid://6031071053",
-                Time = 5
-            })
+            if not game.Workspace:FindFirstChild("Altar") then 
+                OrionLib:MakeNotification({
+                    Name = "flop",
+                    Content = "no altar found",
+                    Image = "rbxassetid://6031075926",
+                    Time = 5
+                })
+            else
+                OrionLib:MakeNotification({
+                    Name = "flop",
+                    Content = "you already maxed out ur altar lol",
+                    Image = "rbxassetid://6031071053",
+                    Time = 5
+                })
+            end 
         end 
     end
 })
